@@ -50,7 +50,7 @@ int buscar(char *fichero, int codigo)
         return -1;
     }
 
-    codigo = reg.codigo;
+    reg.codigo=codigo;
     salida = busquedaHash(fHash, &reg, &pos);
     if (salida == -1)
     {
