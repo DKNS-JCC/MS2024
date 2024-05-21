@@ -34,7 +34,6 @@ int buscar(char *fichero, char *dni)
 {
     tPosicion pos;
     tAlumno reg;
-
     int salida;
 
     FILE *fHash = fopen(fichero, "rb");
@@ -42,7 +41,6 @@ int buscar(char *fichero, char *dni)
     {
         return -1;
     }
-
     strcpy(reg.dni, dni);
     salida = busquedaHash(fHash, &reg, &pos);
     if (salida == -1)
