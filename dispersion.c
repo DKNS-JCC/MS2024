@@ -207,32 +207,29 @@ int busquedaHash(FILE *fHash, tipoReg *reg, tPosicion *posicion)
    fread(&regC, sizeof(regConfig), 1, fHash);
 
    int hash = funcionHash(reg, regC.nCubos); // Calculamos la posicion del cubo
-
+ 
    fseek(fHash, sizeof(regConfig) + hash * sizeof(tipoCubo), SEEK_SET); // Nos posicionamos en el cubo correspondiente
    fread(&cubo, sizeof(tipoCubo), 1, fHash);
 
    for (int i = 0; i < cubo.numRegAsignados; i++)
-   {
+   { 
       if (cmpClave(reg, &cubo.reg[i]) == 0) // Si encontramos el registro
       {
          posicion->cubo = hash;  // Guardamos la posicion del cubo
          posicion->cuboDes = -1; // No esta desbordado
          posicion->posReg = i;   // Guardamos la posicion del registro
-         *reg = cubo.reg[i];     // Guardamos el registro
+         *reg = cubo.reg[i];     // Guardamos el registro a buscar
          return 0;
       }
    }
    if (cubo.desbordado == 1) // Si el cubo esta desbordado
    {
-      int cubosDes = regC.nCubos;
-      while (1)
+      int cubosDes = regC.nCubos; //Nos colocamos en la primera posicion de los cubos desborde
+      while (1) //Bucle para recorrer los cubos desborde
       {
          fseek(fHash, sizeof(regConfig) + cubosDes * sizeof(tipoCubo), SEEK_SET); // Nos posicionamos en el cubo desborde
-         if (fread(&cubo, sizeof(tipoCubo), 1, fHash) != 1)
-         {
-            perror("Error leyendo el cubo");
-            return -2;
-         }
+         fread(&cubo, sizeof(tipoCubo), 1, fHash);
+
          for (int i = 0; i < cubo.numRegAsignados; i++)
          {
             if (cmpClave(reg, &cubo.reg[i]) == 0) // Si encontramos el registro
